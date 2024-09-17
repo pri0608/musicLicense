@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.r3.developers.cordapptemplate.workflows
+Corda-CPK-Format: 2.0
+Corda-CPK-Cordapp-Name: com.r3.developers.cordapptemplate.workflows
+Bundle-Name: workflows
+Bundle-Vendor: "R3"
+Bundle-License: "Apache License, Version 2.0"
+Cordapp-Workflow-Name: workflows
+Cordapp-Workflow-Version: 1
+Cordapp-Workflow-Vendor: "R3"
+Cordapp-Workflow-Licence: "Apache License, Version 2.0"
+Corda-CPK-Cordapp-Vendor: "R3"
+Corda-CPK-Cordapp-Licence: "Apache License, Version 2.0"
+Target-Platform-Version: 999
+Min-Platform-Version: 999
+Sealed: true
+

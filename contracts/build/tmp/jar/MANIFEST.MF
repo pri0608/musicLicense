@@ -1,0 +1,17 @@
+Manifest-Version: 1.0
+Bundle-SymbolicName: com.r3.developers.cordapptemplate.contracts
+Corda-CPK-Format: 2.0
+Corda-CPK-Cordapp-Name: com.r3.developers.cordapptemplate.contracts
+Bundle-Name: contracts
+Bundle-Vendor: "R3"
+Bundle-License: "Apache License, Version 2.0"
+Cordapp-Contract-Name: contracts
+Cordapp-Contract-Version: 1
+Cordapp-Contract-Vendor: "R3"
+Cordapp-Contract-Licence: "Apache License, Version 2.0"
+Corda-CPK-Cordapp-Vendor: "R3"
+Corda-CPK-Cordapp-Licence: "Apache License, Version 2.0"
+Target-Platform-Version: 999
+Min-Platform-Version: 999
+Sealed: true
+
