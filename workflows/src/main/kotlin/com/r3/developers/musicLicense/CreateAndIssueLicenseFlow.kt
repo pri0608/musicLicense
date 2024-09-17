@@ -57,13 +57,10 @@ class CreateAndIssueLicenseFlow : ClientStartableFlow {
         val approverName = request.requestedTo
         // Retrieve the notaries public key (this will change)
         val notaryInfo = notaryLookup.notaryServices.single()
-        val requester = memberLookup.lookup(requesterName)
-            ?.let { it.ledgerKeys.first() }
+        val requester = memberLookup.lookup(requesterName)?.ledgerKeys?.first()
             ?: throw IllegalArgumentException("The holder $requesterName does not exist within the network")
-        val approver = memberLookup.lookup(approverName)
-            ?.let { it.ledgerKeys.first() }
+        val approver = memberLookup.lookup(approverName)?.ledgerKeys?.first()
             ?: throw IllegalArgumentException("The holder $approverName does not exist within the network")
-        val issuer = memberLookup.myInfo().ledgerKeys.first()
 
         val newLicenseAgreement = LicenseAgreement(
             id = UUID.randomUUID(),
@@ -75,7 +72,7 @@ class CreateAndIssueLicenseFlow : ClientStartableFlow {
             status = AgreementStatus.REQUESTED,
             rejectionReason = null,
             rejectedBy = null,
-            participants = listOf(requester, approver, issuer),
+            participants = listOf(requester, approver),
         )
 
         val transaction = utxoLedgerService.createTransactionBuilder()
@@ -83,7 +80,7 @@ class CreateAndIssueLicenseFlow : ClientStartableFlow {
             .addOutputState(newLicenseAgreement)
             .addCommand(MusicLicenseCommands.Request())
             .setTimeWindowUntil(Instant.now().plus(1, ChronoUnit.DAYS))
-            .addSignatories(listOf(requester, approver, issuer))
+            .addSignatories(listOf(requester, approver))
             .toSignedTransaction()
 
         val session = flowMessaging.initiateFlow(requesterName)
