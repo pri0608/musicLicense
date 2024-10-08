@@ -29,6 +29,26 @@ class AgreementStateContract : Contract{
                     "The output state must have clear details about requested song and its proposed cost"
                 }
             }
+            is MusicLicenseCommands.AgreeAndRequest-> {
+                val input = transaction.getInputStates(LicenseAgreement::class.java).first()
+                val output = transaction.getOutputStates(LicenseAgreement::class.java).first()
+
+                require(transaction.getInputStates(LicenseAgreement::class.java).size == 1) {
+                    "This transaction must only have one AgreementState state as input"
+                }
+                require(input.status == AgreementStatus.REQUESTED) {
+                    "The status of input state must be REQUESTED"
+                }
+                require(output.status == AgreementStatus.REQUESTED) {
+                    "The status of output state must be AGREED_AND_REQUESTED"
+                }
+                require(output.rejectedBy == null && output.rejectionReason == null) {
+                    "The rejectedBy and rejectionReason fields of output state must be null"
+                }
+                require(transaction.signatories.contains(input.consenter)) {
+                    "The consenter of the input state must be a signatory to the transaction"
+                }
+            }
             is MusicLicenseCommands.Agree -> {
                 log.info("AgreementStateContract: InputState size: ${transaction.getInputStates(LicenseAgreement::class.java).size}")
                 log.info("AgreementStateContract: InputState : ${transaction.getInputStates(LicenseAgreement::class.java).first()}")
@@ -44,8 +64,8 @@ class AgreementStateContract : Contract{
                 require(transaction.getInputStates(LicenseAgreement::class.java).size == 1) {
                     "This transaction must only have one AgreementState state as input"
                 }
-                require(output.status == AgreementStatus.AGREED) {
-                    "The status of output state must be AGREED"
+                require(input.status == AgreementStatus.REQUESTED) {
+                    "The status of input state must be REQUESTED"
                 }
                 require(transaction.signatories.contains(input.consenter)) {
                     "The consenter of the input state must be a signatory to the transaction"
@@ -60,9 +80,6 @@ class AgreementStateContract : Contract{
                 require(transaction.signatories.contains(input.consenter)) {
                     "The consenter of the input state must be a signatory to the transaction"
                 }
-                require(output.status == AgreementStatus.REJECTED) {
-                    "The status of output state must be REJECTED"
-                }
                 require(output.rejectedBy != null && output.rejectionReason != null) {
                     "The fields rejectedBy and rejectionReason can not be null"
                 }
@@ -70,14 +87,14 @@ class AgreementStateContract : Contract{
                     "The consenter of the input state must be the same party as rejectedBy of the output state"
                 }
             }
-            is MusicLicenseCommands.Complete -> {
+            is MusicLicenseCommands.Close -> {
                 val input = transaction.getInputStates(LicenseAgreement::class.java).first()
                 val output = transaction.getOutputStates(LicenseAgreement::class.java).first()
                 require(input.status == AgreementStatus.AGREED || input.status == AgreementStatus.REJECTED) {
                     "The status of input state must either be AGREED or REJECTED"
                 }
-                require(output.status == AgreementStatus.COMPLETED) {
-                    "The status of output state must be COMPLETED"
+                require(output.status == AgreementStatus.CLOSED) {
+                    "The status of output state must be CLOSED"
                 }            }
             else -> {
                 throw IllegalArgumentException("Incorrect type of command: ${command::class.java.name}")
